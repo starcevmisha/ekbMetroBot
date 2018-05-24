@@ -81,6 +81,7 @@ keyboard.add("Ботанническая")
 
 if __name__ == '__main__':
     if "HEROKU" in os.environ:
+        bot.set_webhook("https://metro-bot.herokuapp.com/")
         PORT = int(os.environ.get('PORT', '5000'))
         server.run("0.0.0.0", PORT)
     else:
