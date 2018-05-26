@@ -48,17 +48,19 @@ stations = {'Космонавтов', 'Уралмаш на Космонавто�
 def send_time(message):
     date = datetime.date.today().strftime('%Y%m%d')
     time = datetime.datetime.now().strftime("%H:%M")
-    if requests.get(f"https://isdayoff.ru/{date}").text == 1:
+    if requests.get(f"https://isdayoff.ru/{date}").text == "1":
         index = bisect.bisect_left(weekend_times[message.text], time)
         left = 0 if index == 0 else index - 1
         right = len(weekend_times[message.text]) - 1 if index == len(weekend_times[message.text]) else index + 2
         result = weekend_times[message.text][left:right]
+        daytype = "weekend"
     else:
         index = bisect.bisect_left(workday_times[message.text], time)
         left = 0 if index == 0 else index - 1
         right = len(workday_times[message.text]) - 1 if index == len(workday_times[message.text]) else index + 2
         result = workday_times[message.text][left:right]
-    bot.send_message(message.chat.id, f"Your time{time}\n" + ' '.join(result), reply_markup=keyboard)
+        daytype = "workday" 
+    bot.send_message(message.chat.id, f"Your time {time}, {daytype}. \n" + ' '.join(result), reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=["text"])
