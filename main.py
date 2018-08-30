@@ -51,13 +51,13 @@ def send_time(message):
     if requests.get(f"https://isdayoff.ru/{date}").text == "1":
         index = bisect.bisect_left(weekend_times[message.text], time)
         left = 0 if index == 0 else index - 1
-        right = len(weekend_times[message.text]) - 1 if index == len(weekend_times[message.text]) else index + 2
+        right = min(index+5, len(weekend_times[message.text]))
         result = weekend_times[message.text][left:right]
         daytype = "weekend"
     else:
         index = bisect.bisect_left(workday_times[message.text], time)
         left = 0 if index == 0 else index - 1
-        right = len(workday_times[message.text]) - 1 if index == len(workday_times[message.text]) else index + 2
+        right = min(index+5, len(workday_times[message.text]))
         result = workday_times[message.text][left:right]
         daytype = "workday" 
     bot.send_message(message.chat.id, f"Your time {time}, {daytype}. \n" + ' '.join(result), reply_markup=keyboard)
